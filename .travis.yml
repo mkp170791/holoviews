@@ -71,13 +71,13 @@ jobs:
         - sudo ln -s $HOME/miniconda/bin/conda /usr/bin/
         - sudo doit ecosystem_setup
       install:
-        - doit env_create $CHANS_DEV --python=$PYTHON_VERSION
+        - sudo doit env_create $CHANS_DEV --python=$PYTHON_VERSION
         - source activate test-environment
-        - travis_wait 20 doit develop_install $CHANS_DEV -o $HV_REQUIREMENTS
-        - doit env_capture
+        - sudo travis_wait 20 doit develop_install $CHANS_DEV -o $HV_REQUIREMENTS
+        - sudo doit env_capture
       script:
-        - doit test_all_recommended
-      after_success: coveralls
+        - sudo doit test_all_recommended
+      after_success: sudo coveralls
       after_failure: sleep 10
 
     - <<: *default
