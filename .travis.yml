@@ -9,7 +9,8 @@ language: generic
 
 os:
   - linux
-
+arch:
+  - arm64
 dist: xenial
 
 notifications:
@@ -58,10 +59,17 @@ jobs:
       stage: test
       env: DESC="Python 3.6 tests" HV_REQUIREMENTS="unit_tests" PYTHON_VERSION=3.6
       before_install:
-        - pip install pyctdev && doit miniconda_install && pip uninstall -y doit pyctdev
+        - sudo pip install flake8
+        - which flake8
+        - sudo which flake8
+        - sudo pip install pyctdev
+        - wget "https://github.com/Archiconda/build-tools/releases/download/0.2.3/Archiconda3-0.2.3-Linux-aarch64.sh" -O archiconda.sh
+        - chmod +x archiconda.sh
+        - bash archiconda.sh -b -p $HOME/miniconda
         - export PATH="$HOME/miniconda/bin:$PATH" && hash -r
         - conda config --set always_yes True
-        - conda install -c pyviz "pyctdev>=0.5" && doit ecosystem_setup
+        - sudo ln -s $HOME/miniconda/bin/conda /usr/bin/
+        - sudo doit ecosystem_setup
       install:
         - doit env_create $CHANS_DEV --python=$PYTHON_VERSION
         - source activate test-environment
